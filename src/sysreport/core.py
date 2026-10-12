@@ -25,6 +25,8 @@ print("Disk \n")
 print(disk.get_total_space_bytes())
 print(disk.get_free_space_bytes())
 print(disk.get_usable_space_bytes())
+print(disk.get_mount_device())
+print(disk.get_filesystem_type())
 
 print("--------------")
 
