@@ -4,7 +4,8 @@ import time
 
 class SystemSpecs:
     def __init__(self) -> None:
-        self.os_release_properties = {}
+        self.distro_name = ""
+        self.distro_version = ""
         self.uptime_secs = 0.0
 
         self.__parse_os_release_properties()
@@ -12,21 +13,16 @@ class SystemSpecs:
     def __parse_os_release_properties(self) -> None:
         with open("/etc/os-release", "r", encoding="utf-8") as os_release_file:
             for line in os_release_file:
-                key, value = line.split("=")
-
-                if value.startswith('"'):
-                    value = value.replace('"', '')
-
-                key = key.strip("\n")
-                value = value.strip("\n")
-
-                self.os_release_properties[key] = value
+                if line.startswith("NAME"):
+                    self.distro_name = line.split("=")[1].strip()
+                elif line.startswith("VERSION_ID"):
+                    self.distro_version = line.split("=")[1].replace('"', "").strip()
 
     def get_distro_name(self) -> str:
-        return self.os_release_properties["NAME"]
+        return self.distro_name
 
     def get_distro_version(self) -> str:
-        return self.os_release_properties["VERSION_ID"]
+        return self.distro_version
 
     def __update_uptime_secs(self) -> None:
         before = time.time()
