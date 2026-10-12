@@ -1,4 +1,5 @@
 import os
+import time
 
 
 class CPUInfo:
@@ -53,3 +54,27 @@ class CPUInfo:
     def get_cpu_khz(self) -> list[float]:
         self.__update_cpu_khz()
         return self.cpu_khz
+
+    def __read_cpu_activity(self) -> tuple[float, float]:
+        with open("/proc/stat", "r", encoding="utf-8") as proc_stat:
+            line = proc_stat.readline()
+
+            times = [float(x) for x in line.split()[1:]]
+            total = sum(times)
+            idle = times[4] + times[3]
+
+            return total, idle
+
+    def __update_cpu_usage(self) -> None:
+        total1, idle1 = self.__read_cpu_activity()
+        time.sleep(0.5)
+        total2, idle2 = self.__read_cpu_activity()
+
+        idle_delta = idle2 - idle1
+        total_delta = total2 - total1
+
+        self.cpu_usage = (1.0 - (idle_delta / total_delta)) * 100.0
+
+    def get_cpu_usage(self) -> float:
+        self.__update_cpu_usage()
+        return self.cpu_usage
