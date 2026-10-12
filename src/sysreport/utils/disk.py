@@ -2,33 +2,32 @@ import os
 
 
 class DiskUsage:
-    def __init__(self, path) -> None:
-        self.disk_metadata = os.statvfs(path)
+    @staticmethod
+    def __parse_device_properties(path) -> tuple[str, str]:
+        mount_device, disk_fs_type = "", ""
 
-        self.mount_device = ""
-        self.disk_fs_type = ""
-
-        self.__parse_device_properties(path)
-
-    def __parse_device_properties(self, path) -> None:
         with open("/proc/mounts", "r", encoding="utf-8") as proc_mounts:
             for line in proc_mounts:
                 split = line.split()
                 if split[1] == path:
-                    self.mount_device = split[0]
-                    self.disk_fs_type = split[2]
+                    mount_device = split[0]
+                    disk_fs_type = split[2]
+                    break
 
-    def get_total_space_bytes(self) -> int:
-        return self.disk_metadata.f_blocks * self.disk_metadata.f_frsize
+        return mount_device, disk_fs_type
 
-    def get_free_space_bytes(self) -> int:
-        return self.disk_metadata.f_bfree * self.disk_metadata.f_frsize
+    @staticmethod
+    def get_disk_usage_report(path) -> dict[str, str | int]:
+        report = {}
 
-    def get_usable_space_bytes(self) -> int:
-        return self.disk_metadata.f_bavail * self.disk_metadata.f_frsize
+        disk_metadata = os.statvfs(path)
 
-    def get_mount_device(self) -> str:
-        return self.mount_device
+        mount_device, disk_fs_type = DiskUsage.__parse_device_properties(path)
 
-    def get_filesystem_type(self) -> str:
-        return self.disk_fs_type
+        report["total_space"] = disk_metadata.f_blocks * disk_metadata.f_frsize
+        report["total_space"] = disk_metadata.f_bfree * disk_metadata.f_frsize
+        report["total_space"] = disk_metadata.f_bavail * disk_metadata.f_frsize
+        report["mount_device"] = mount_device
+        report["disk_fs_type"] = disk_fs_type
+
+        return report
