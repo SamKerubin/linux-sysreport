@@ -6,7 +6,7 @@ class MemoryUsage:
         with open("/proc/meminfo", "r", encoding="utf-8") as proc_meminfo:
             for line in proc_meminfo:
                 if line.startswith(
-                    ("MemTotal", "MemFree", "MemAvailable", "SwapTotal", "SwapFree")
+                    ("MemTotal", "MemAvailable", "SwapTotal", "SwapFree")
                 ):
                     split = line.split(":")
 
