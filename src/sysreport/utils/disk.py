@@ -25,8 +25,8 @@ class DiskUsage:
         mount_device, disk_fs_type = DiskUsage.__parse_device_properties(path)
 
         report["total_space"] = disk_metadata.f_blocks * disk_metadata.f_frsize
-        report["total_space"] = disk_metadata.f_bfree * disk_metadata.f_frsize
-        report["total_space"] = disk_metadata.f_bavail * disk_metadata.f_frsize
+        report["free_space"] = disk_metadata.f_bfree * disk_metadata.f_frsize
+        report["usable_space"] = disk_metadata.f_bavail * disk_metadata.f_frsize
         report["mount_device"] = mount_device
         report["disk_fs_type"] = disk_fs_type
 
