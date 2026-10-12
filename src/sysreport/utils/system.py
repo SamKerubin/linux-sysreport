@@ -22,7 +22,6 @@ class SystemSpecs:
 
         distro_name, distro_version = SystemSpecs.__parse_os_release_properties()
 
-        uname = os.uname()
         before = time.time()
         with open("/proc/uptime", "r", encoding="utf-8") as uptime_file:
             uptime_line = uptime_file.readline()
@@ -32,10 +31,13 @@ class SystemSpecs:
 
             uptime_secs = float(uptime_line.split(" ")[0]) + delta
 
+        uname = os.uname()
+
         report["name"] = distro_name
         report["version_id"] = distro_version
         report["k_ver"] = uname.release
         report["arch"] = uname.machine
+        report["k_name"] = uname.sysname
         report["uptime"] = uptime_secs
 
         return report
