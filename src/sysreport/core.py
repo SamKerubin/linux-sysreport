@@ -18,6 +18,11 @@ def main() -> None:
         action="store_true",
         help="Returns the report in a JSON string format.",
     )
+    parser.add_argument(
+        "--json-pretty",
+        action="store_true",
+        help="Returns the report as a prettyfied JSON string.",
+    )
 
     args = parser.parse_args()
 
@@ -35,6 +40,10 @@ def main() -> None:
 
     if args.json:
         print(json.dumps(report))
+        sys.exit(0)
+
+    if args.json_pretty:
+        print(json.dumps(report, indent="\t"))
         sys.exit(0)
 
     def to_readable_time(t) -> str:
