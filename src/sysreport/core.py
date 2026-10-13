@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+import argparse
+import json
 import os
+import sys
 
 from sysreport.utils.cpu import CPUInfo
 from sysreport.utils.disk import DiskUsage
@@ -9,6 +12,15 @@ from sysreport.utils.system import SystemSpecs
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Returns the report in a JSON string format.",
+    )
+
+    args = parser.parse_args()
+
     report = {
         "cpu": CPUInfo.get_cpu_info_report(),
         "disk": {
@@ -20,6 +32,10 @@ def main() -> None:
         "memory": MemoryUsage.get_memory_report(),
         "system": SystemSpecs.get_system_specs_report(),
     }
+
+    if args.json:
+        print(json.dumps(report))
+        sys.exit(0)
 
     def to_readable_time(t) -> str:
         if t == 0:
