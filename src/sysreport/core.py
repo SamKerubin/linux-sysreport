@@ -26,6 +26,10 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    if args.json and args.json_pretty:
+        print("Error: Cant use both [--json] and [--json-pretty] at the same time.", file=sys.stderr)
+        sys.exit(1)
+
     report = {
         "cpu": CPUInfo.get_cpu_info_report(),
         "disk": {
