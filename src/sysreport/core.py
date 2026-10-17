@@ -143,13 +143,13 @@ def main() -> None:
     swap_used = memory_usage["swaptotal"] - memory_usage["swapfree"]
 
     print("\nMemory usage\n")
-    print(f"RAM total: {round(memory_usage['memtotal'] / 1024**2, 2)} GB")
+    print(f"RAM total: {round(memory_usage['memtotal'] * 1.024e-6, 2)} GB")
     print(
-        f"RAM used: {round(ram_used / 1024**2, 2)} GB -- {round(ram_used / memory_usage['memtotal'] * 100, 2)}%"
+        f"RAM used: {round(ram_used * 1.024e-6, 2)} GB -- {round(ram_used / memory_usage['memtotal'] * 100, 2)}%"
     )
-    print(f"Swap total: {round(memory_usage['swaptotal'] / 1024**2, 2)} GB")
+    print(f"Swap total: {round(memory_usage['swaptotal'] * 1.024e-6, 2)} GB")
     print(
-        f"Swap used: {round(swap_used / 1024**2, 2)} GB -- {round(swap_used / memory_usage['swaptotal'] * 100, 2)}%"
+        f"Swap used: {round(swap_used * 1.024e-6, 2)} GB -- {round(swap_used / memory_usage['swaptotal'] * 100, 2)}%"
     )
 
 
