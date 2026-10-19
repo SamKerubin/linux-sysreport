@@ -8,6 +8,7 @@ import sys
 from sysreport.utils.cpu import CPUInfo
 from sysreport.utils.disk import DiskUsage
 from sysreport.utils.memory import MemoryUsage
+from sysreport.utils.power import PowerSupplyStatus
 from sysreport.utils.system import SystemSpecs
 
 
@@ -27,7 +28,10 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.json and args.json_pretty:
-        print("Error: Cant use both [--json] and [--json-pretty] at the same time.", file=sys.stderr)
+        print(
+            "Error: Cant use both [--json] and [--json-pretty] at the same time.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     report = {
@@ -39,6 +43,7 @@ def main() -> None:
             else {},
         },
         "memory": MemoryUsage.get_memory_report(),
+        "power_supply": PowerSupplyStatus.get_power_supply_report(),
         "system": SystemSpecs.get_system_specs_report(),
     }
 
@@ -91,6 +96,57 @@ def main() -> None:
             f"Used storage: ({round(used_storage / 1000**3, 2)}/{round(d_rep['total_space'] / 1000**3, 2)}) GB -- {used_storage_percent}%"
         )
         print(f"Available storage: {round(d_rep['usable_space'] / 1000**3, 2)} GB")
+
+        print()
+
+    # TODO: Add cases for USB and UPS devices
+    def print_power_supply_report(ps_rep) -> None:
+        ps_type = ps_rep["power_supply_type"]
+
+        print(ps_rep["power_supply_name"])
+        match ps_type:
+            case "Battery":
+                print(
+                    f"Model: {ps_rep['power_supply_manufacturer']} -- {ps_rep['power_supply_model_name']}"
+                )
+
+                battery_voltage = round(ps_rep['power_supply_voltage_now'] / 1000**2, 2)
+                print(
+                    f"Voltage: {battery_voltage} V"
+                )
+
+                battery_charge_rate = 0.0
+                if "power_supply_power_now" in ps_rep:
+                    battery_charge_rate = round(ps_rep["power_supply_power_now"] / 1000**2, 2)
+                else:
+                    battery_current_amper = round(ps_rep['power_supply_current_now'] / 1000**2, 2)
+                    battery_charge_rate = battery_voltage * battery_current_amper
+
+                battery_status = ps_rep["power_supply_status"]
+                battery_status_readable = "Unknown status"
+
+                if battery_status == "Full":
+                    battery_status_readable = "Fully charged"
+                elif battery_status == "Discharging":
+                    battery_status_readable = f"Discharging at {round(battery_charge_rate, 2)} W"
+                elif battery_status == "Charging":
+                    battery_status_readable = f"Charging at {round(battery_charge_rate, 2)} W"
+                elif battery_status == "Not charging":
+                    battery_status_readable = "Connected, not charging"
+
+                print(
+                    f"Capacity: {ps_rep['power_supply_capacity']}% -- {ps_rep['power_supply_capacity_level']}, {battery_status_readable}"
+                )
+
+                battery_health = (ps_rep["power_supply_charge_full"] / ps_rep["power_supply_charge_full_design"]) * 100.0
+
+                print(f"Battery health: {round(battery_health, 2)}%")
+            case "Mains":
+                print(
+                    f"Connected to current: {'yes' if ps_rep['power_supply_online'] == 1 else 'no'}"
+                )
+            case _:
+                print(f"Unknown device type: {ps_type}")
 
         print()
 
@@ -155,6 +211,15 @@ def main() -> None:
     print(
         f"Swap used: {round(swap_used * 1.024e-6, 2)} GB -- {round(swap_used / memory_usage['swaptotal'] * 100, 2)}%"
     )
+
+    print("\n-----------------")
+
+    power_supply_status = report["power_supply"]
+
+    print("\nPower supply status\n")
+
+    for ps_dev in power_supply_status:
+        print_power_supply_report(ps_dev)
 
 
 if __name__ == "__main__":
