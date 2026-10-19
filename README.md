@@ -4,18 +4,20 @@ linux-sysreport is a CLI tool made with Python for Linux subsystems focused on, 
 
 ## Installation
 
-For a quick, rapid installation, you can use the `install.sh` script.
+For a quick, rapid installation, you can use the _[install.sh](./install.sh)_ script.
 If you cant execute it remember to give it execution permissions with: `chmod +x install.sh`
 
 Otherwise, if youd like to do the installation manually, here are the steps:
 
 1. Create a virtual environment: `python -m venv venv`
 2. Activate the environment: `source venv/bin/activate`
-3. Install the required dependencies (`pyinstaller`).
-You can use `pip install pyinstaller` or directly using the `pyproject.toml` dependencies with `pip install --group dev`
+3. Install the required dependencies with `pip install -e .`
 4. To create the final binary, run pyinstaller: `pyinstaller --onefile --name=sysreport src/sysreport/core.py`
 
-And thats it! If you didnt specify a distpath with pyinstaller, your binary will be at `./dist/sysreport`
+And thats it! If you didnt specify a `distpath` with pyinstaller, your binary will be at `./dist/sysreport`
+
+> NOTE: If you want to modify the source code, run: `pip install --group dev`.
+It will install all developers dependencies. You can then run the program with: `./src/sysreport/core.py`
 
 ## Report
 
