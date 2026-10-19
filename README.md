@@ -72,27 +72,27 @@ Reports the state of the root `/` disk partition. If running on UEFI, reports th
 ```
 System specs
 
-Distro: NixOS 26.05 x86_64
-Kernel: Linux 7.2.9
-Uptime: 57 minutes
+Distro: NixOS 26.11 x86_64
+Kernel: Linux 7.2.10
+Uptime: 3 hours 52 minutes
 
 -----------------
 
 CPU information
 
-CPU: AMD Ryzen 5 7520U with Radeon Graphics -- 19.85%
-Load average: 0.78, 1.11, 1.25
-Core temperature: 56.0 °C
+CPU: AMD Ryzen 5 7520U with Radeon Graphics -- 4.48%
+Load average: 0.76, 0.99, 1.13
+Core temperature: 55.0 °C
 Core frequency: 
-	0: 2.85 GHz
-	1: 2.85 GHz
-	2: 2.84 GHz
-	3: 2.81 GHz
-	4: 1.9 GHz
-	5: 2.68 GHz
-	6: 2.51 GHz
-	7: 2.65 GHz
-Average core frequency: 2.64 GHz
+	0: 1.11 GHz
+	1: 1.11 GHz
+	2: 1.11 GHz
+	3: 2.57 GHz
+	4: 1.11 GHz
+	5: 1.26 GHz
+	6: 1.81 GHz
+	7: 2.74 GHz
+Average core frequency: 1.6 GHz
 
 -----------------
 
@@ -102,30 +102,43 @@ Disk usage
 Device mounted: /dev/nvme0n1p1
 Filesystem: vfat
 Total storage: 1.07 GB
-Used storage: (0.27/1.07) GB -- 33.89%
-Available storage: 0.8 GB
+Used storage: (0.23/1.07) GB -- 27.8%
+Available storage: 0.84 GB
 
 /
 Device mounted: /dev/nvme0n1p2
 Filesystem: ext4
 Total storage: 385.68 GB
-Used storage: (51.87/385.68) GB -- 16.51%
-Available storage: 314.14 GB
+Used storage: (68.15/385.68) GB -- 22.88%
+Available storage: 297.86 GB
 
 -----------------
 
 Memory usage
 
-RAM total: 7.04 GB
-RAM used: 5.28 GB -- 75.0%
-Swap total: 12.32 GB
-Swap used: 0.24 GB -- 1.98%
+RAM total: 7.56 GB
+RAM used: 5.48 GB -- 72.49%
+Swap total: 13.23 GB
+Swap used: 0.69 GB -- 5.23%
+
+-----------------
+
+Power supply status
+
+AC0
+Connected to current: yes
+
+BAT0
+Model: OEM -- X160535
+Voltage: 12.54 V
+Capacity: 100% -- Full, Fully charged
+Battery health: 75.89%
 ```
 
 ### Ran with `--json`
 
 ```
-{"cpu": {"cpu_model": "AMD Ryzen 5 7520U with Radeon Graphics", "load_average": [0.7880859375, 1.25439453125, 1.34423828125], "cpu_temp": 56000.0, "cpu_khz": {"0": 2582359.0, "1": 1109831.0, "2": 2442094.0, "3": 1264282.0, "4": 2497615.0, "5": 2452207.0, "6": 2556110.0, "7": 2640155.0}, "cpu_usage": 7.862407862407861}, "disk": {"/": {"total_space": 385676742656, "free_space": 333805998080, "usable_space": 314139750400, "mount_device": "/dev/nvme0n1p2", "disk_fs_type": "ext4"}, "/boot": {"total_space": 1071628288, "free_space": 800354304, "usable_space": 800354304, "mount_device": "/dev/nvme0n1p1", "disk_fs_type": "vfat"}}, "memory": {"memtotal": 7383696.0, "memavailable": 1588612.0, "swaptotal": 12918984.0, "swapfree": 12637624.0}, "system": {"name": "NixOS", "version_id": "26.05", "k_ver": "7.2.9", "arch": "x86_64", "k_name": "Linux", "uptime": 4047.9800228881836}}
+{"cpu": {"cpu_model": "AMD Ryzen 5 7520U with Radeon Graphics", "load_average": [0.83837890625, 0.96435546875, 1.1083984375], "cpu_temp": 55000.0, "cpu_khz": {"0": 2631666, "1": 1109831, "2": 2676434, "3": 2719825, "4": 1918139, "5": 1109831, "6": 2754696, "7": 2801561}, "cpu_usage": 6.716417910447758}, "disk": {"/": {"total_space": 385676742656, "free_space": 317526855680, "usable_space": 297860608000, "mount_device": "/dev/nvme0n1p2", "disk_fs_type": "ext4"}, "/boot": {"total_space": 1071628288, "free_space": 838496256, "usable_space": 838496256, "mount_device": "/dev/nvme0n1p1", "disk_fs_type": "vfat"}}, "memory": {"memtotal": 7384720, "memavailable": 2035488, "swaptotal": 12919496, "swapfree": 12244400}, "power_supply": [{"power_supply_name": "AC0", "power_supply_type": "Mains", "power_supply_online": 1}, {"power_supply_name": "BAT0", "power_supply_type": "Battery", "power_supply_status": "Full", "power_supply_present": 1, "power_supply_technology": "Li-ion", "power_supply_cycle_count": 0, "power_supply_voltage_min_design": 11850000, "power_supply_voltage_now": 12543000, "power_supply_current_now": 0, "power_supply_charge_full_design": 3550000, "power_supply_charge_full": 2694000, "power_supply_charge_now": 2694000, "power_supply_capacity": 100, "power_supply_capacity_level": "Full", "power_supply_model_name": "X160535", "power_supply_manufacturer": "OEM", "power_supply_serial_number": ""}], "system": {"name": "NixOS", "version_id": "26.11", "k_ver": "7.2.10", "arch": "x86_64", "k_name": "Linux", "uptime": 13998.14004529953}}```
 ```
 
 ### Ran with `--json-pretty`
@@ -135,52 +148,78 @@ Swap used: 0.24 GB -- 1.98%
 	"cpu": {
 		"cpu_model": "AMD Ryzen 5 7520U with Radeon Graphics",
 		"load_average": [
-			0.865234375,
-			1.20361328125,
-			1.322265625
+			0.86962890625,
+			0.9658203125,
+			1.10693359375
 		],
 		"cpu_temp": 56000.0,
 		"cpu_khz": {
-			"0": 1264402.0,
-			"1": 1529683.0,
-			"2": 2789436.0,
-			"3": 2582881.0,
-			"4": 1264225.0,
-			"5": 2006644.0,
-			"6": 2602986.0,
-			"7": 2119672.0
+			"0": 2495167,
+			"1": 2654677,
+			"2": 2571383,
+			"3": 1263313,
+			"4": 1550114,
+			"5": 2631660,
+			"6": 1837174,
+			"7": 1699612
 		},
-		"cpu_usage": 5.940594059405946
+		"cpu_usage": 4.455445544554459
 	},
 	"disk": {
 		"/": {
 			"total_space": 385676742656,
-			"free_space": 333805965312,
-			"usable_space": 314139717632,
+			"free_space": 317526851584,
+			"usable_space": 297860603904,
 			"mount_device": "/dev/nvme0n1p2",
 			"disk_fs_type": "ext4"
 		},
 		"/boot": {
 			"total_space": 1071628288,
-			"free_space": 800354304,
-			"usable_space": 800354304,
+			"free_space": 838496256,
+			"usable_space": 838496256,
 			"mount_device": "/dev/nvme0n1p1",
 			"disk_fs_type": "vfat"
 		}
 	},
 	"memory": {
-		"memtotal": 7383696.0,
-		"memavailable": 1577416.0,
-		"swaptotal": 12918984.0,
-		"swapfree": 12637644.0
+		"memtotal": 7384720,
+		"memavailable": 2034632,
+		"swaptotal": 12919496,
+		"swapfree": 12244420
 	},
+	"power_supply": [
+		{
+			"power_supply_name": "AC0",
+			"power_supply_type": "Mains",
+			"power_supply_online": 1
+		},
+		{
+			"power_supply_name": "BAT0",
+			"power_supply_type": "Battery",
+			"power_supply_status": "Full",
+			"power_supply_present": 1,
+			"power_supply_technology": "Li-ion",
+			"power_supply_cycle_count": 0,
+			"power_supply_voltage_min_design": 11850000,
+			"power_supply_voltage_now": 12544000,
+			"power_supply_current_now": 0,
+			"power_supply_charge_full_design": 3550000,
+			"power_supply_charge_full": 2694000,
+			"power_supply_charge_now": 2694000,
+			"power_supply_capacity": 100,
+			"power_supply_capacity_level": "Full",
+			"power_supply_model_name": "X160535",
+			"power_supply_manufacturer": "OEM",
+			"power_supply_serial_number": ""
+		}
+	],
 	"system": {
 		"name": "NixOS",
-		"version_id": "26.05",
-		"k_ver": "7.2.9",
+		"version_id": "26.11",
+		"k_ver": "7.2.10",
 		"arch": "x86_64",
 		"k_name": "Linux",
-		"uptime": 4093.1900228881836
+		"uptime": 14010.860024318696
 	}
 }
 ```
