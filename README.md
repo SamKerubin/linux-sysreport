@@ -62,8 +62,8 @@ Reports the state of the root `/` disk partition. If running on UEFI, reports th
 
 ## Command options
 
-- `--json`:
-- `--json-pretty`:
+- `--json`: Returns a one-liner JSON string.
+- `--json-pretty`: Returns a prettyfied JSON dictionary.
 
 ## Output example
 
