@@ -7,7 +7,7 @@ source "venv/bin/activate"
 
 echo "Installing dependencies..."
 
-pip install --group dev
+pip install -e .
 
 read -r -n 1 -p "Do you want to install sysreport globally (at '/usr/local/bin') in the system? Y/n: " global
 echo ""
