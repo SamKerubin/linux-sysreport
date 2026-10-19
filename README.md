@@ -60,6 +60,16 @@ Reports the state of the root `/` disk partition. If running on UEFI, reports th
 - Total Swap (kB)
 - Swap available (kB)
 
+### Power supply status
+
+Depends on the power supply device type:
+
+- Mains:
+    - Name of the device
+    - Device online
+
+- Battery: All fields exposed by the manufacturer at `/sys/class/power_supply/BATX/uevent`
+
 ## Command options
 
 - `--json`: Returns a one-liner JSON string.
