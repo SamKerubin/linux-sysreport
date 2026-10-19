@@ -55,10 +55,10 @@ Reports the state of the root `/` disk partition. If running on UEFI, reports th
 
 ### Memory usage
 
-- Total RAM (Kb)
-- RAM available (Kb)
-- Total Swap (Kb)
-- Swap available (Kb)
+- Total RAM (kB)
+- RAM available (kB)
+- Total Swap (kB)
+- Swap available (kB)
 
 ## Command options
 
