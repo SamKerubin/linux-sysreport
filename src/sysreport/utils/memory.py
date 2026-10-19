@@ -13,6 +13,6 @@ class MemoryUsage:
                     key = split[0].lower()
                     value = split[1].strip()[:-3]
 
-                    report[key] = float(value)
+                    report[key] = int(value)
 
         return report

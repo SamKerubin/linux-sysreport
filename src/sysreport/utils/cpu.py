@@ -46,7 +46,7 @@ class CPUInfo:
         for core in cores:
             path = os.path.join(BASE_PATH, core, "cpufreq/scaling_cur_freq")
             with open(path, "r", encoding="utf-8") as core_freq:
-                khz = float(core_freq.readline().strip())
+                khz = int(core_freq.readline().strip())
                 cpu_khz.append(khz)
 
         total1, idle1 = CPUInfo.__read_cpu_activity()
