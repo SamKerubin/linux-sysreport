@@ -51,11 +51,41 @@ class CPUInfo:
 
         cpu_model = CPUInfo.__parse_cpu_model()
 
-        with open(
-            "/sys/class/thermal/thermal_zone0/temp", "r", encoding="utf-8"
-        ) as temp:
-            line = temp.readline()
-            cpu_temp = float(line)
+        cpu_temp = None
+        try:
+            THERMAL_ZONE_BASE_PATH = "/sys/class/thermal/"
+            thermal_zones = [
+                dir
+                for dir in os.listdir(THERMAL_ZONE_BASE_PATH)
+                if dir.startswith("thermal_zone")
+            ]
+
+            selected = ""
+            for zone in thermal_zones:
+                zone_type_path = os.path.join(THERMAL_ZONE_BASE_PATH, zone, "type")
+                with open(zone_type_path, "r", encoding="utf-8") as zone_type:
+                    line = zone_type.readline()
+                    line = line.strip()
+                    if (
+                        line != "acpitz"
+                        and line != "x86_pkg_temp"
+                        and line != "k10temp"
+                        and line != "cpu-thermal"
+                        and line != "cpu_thermal"
+                        and line != "soc-thermal"
+                        and line != "soc_thermal"
+                    ):
+                        continue
+
+                    selected = zone
+                    break
+
+            temp_path = os.path.join(THERMAL_ZONE_BASE_PATH, selected, "temp")
+            with open(temp_path, "r", encoding="utf-8") as temp:
+                line = temp.readline()
+                cpu_temp = float(line)
+        except OSError:
+            cpu_temp = None
 
         cpu_khz = []
         CPU_FREQ_BASE_PATH = "/sys/devices/system/cpu/"
