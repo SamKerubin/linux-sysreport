@@ -13,6 +13,28 @@ class CPUInfo:
         return "Unknown"
 
     @staticmethod
+    def __parse_cpu_khz_cpuinfo(cpu_id) -> int | None:
+        with open("/proc/cpuinfo", "r", encoding="utf-8") as cpu_info:
+            content = cpu_info.read()
+
+            for section in content.strip().split("\n\n"):
+                fields = {}
+                for line in section.splitlines():
+                    key, value = line.split(":")
+
+                    fields[key.strip()] = value.strip()
+
+                if fields["processor"] != cpu_id:
+                    continue
+
+                try:
+                    return int(float(fields["cpu MHz"])) * 1000
+                except (ValueError, TypeError, KeyError):
+                    return None
+
+        return None
+
+    @staticmethod
     def __read_cpu_activity() -> tuple[float, float]:
         with open("/proc/stat", "r", encoding="utf-8") as proc_stat:
             line = proc_stat.readline()
@@ -36,15 +58,21 @@ class CPUInfo:
             cpu_temp = float(line)
 
         cpu_khz = []
-        BASE_PATH = "/sys/devices/system/cpu/"
+        CPU_FREQ_BASE_PATH = "/sys/devices/system/cpu/"
 
         cores = [
             dir
-            for dir in os.listdir(BASE_PATH)
+            for dir in os.listdir(CPU_FREQ_BASE_PATH)
             if dir.startswith("cpu") and dir[3:].isdigit()
         ]
         for core in cores:
-            path = os.path.join(BASE_PATH, core, "cpufreq/scaling_cur_freq")
+            path = os.path.join(CPU_FREQ_BASE_PATH, core, "cpufreq/scaling_cur_freq")
+
+            if not os.path.exists(path):
+                khz = CPUInfo.__parse_cpu_khz_cpuinfo(core[3:])
+                cpu_khz.append(khz)
+                continue
+
             with open(path, "r", encoding="utf-8") as core_freq:
                 khz = int(core_freq.readline().strip())
                 cpu_khz.append(khz)
