@@ -21,7 +21,7 @@ class ReportFormatter:
         core_freq_str = "Core frequency:\n"
         individual_core_freq = []
         average_freq = 0.0
-        core_count = 1
+        core_count = 0
 
         for core, freq_khz in core_freq.items():
             if not freq_khz:
