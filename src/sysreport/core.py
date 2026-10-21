@@ -13,7 +13,7 @@ from sysreport.utils.system import SystemSpecs
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         "--json",
         action="store_true",
@@ -24,6 +24,17 @@ def main() -> None:
         action="store_true",
         help="Returns the report as a prettyfied JSON string.",
     )
+    parser.add_argument(
+        "--collect",
+        default="all",
+        help="Select fields to create a report. Works as a list of fields. Default: 'all'.\n"
+        "all: Every field.\n"
+        "cpu: Generate CPU report.\n"
+        "system: Generate system specs report.\n"
+        "mem: Generate memory report.\n"
+        "disk: Generate disk report.\n"
+        "power: Generate power supply report.\n"
+)
 
     args = parser.parse_args()
 
