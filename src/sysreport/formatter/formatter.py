@@ -12,6 +12,19 @@ class ReportFormatter:
         temperature = report["cpu_temp"]
         core_freq = report["cpu_khz"]
 
+        usage_str = "CPU usage:\n"
+        individual_core_usage = []
+
+        for core, core_usage in usage.items():
+            if core == "avg":
+                continue
+
+            individual_core_usage.append(f"\tC{core}: {math.ceil(core_usage)}%\n")
+
+        usage_str += "".join(individual_core_usage)
+        usage_str += f"Average CPU usage: {math.ceil(usage["avg"])}%"
+
+
         temperature_str = (
             f"Core temperature: {math.ceil(temperature / 1000)} °C"
             if temperature
@@ -41,7 +54,8 @@ class ReportFormatter:
 
         return (
             "\n\nCPU information\n\n"
-            f"CPU: {model} -- {math.ceil(usage)}%\n"
+            f"CPU: {model}\n"
+            f"{usage_str}\n"
             f"Load average: {load1:.2f}, {load5:.2f}, {load15:.2f}\n"
             f"{temperature_str}\n"
             f"{core_freq_str}\n"
