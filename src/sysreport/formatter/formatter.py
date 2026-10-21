@@ -76,16 +76,26 @@ class ReportFormatter:
         available_swap = report["swapfree"]
 
         ram_used = total_memory - available_memory
-        swap_used = total_swap - available_swap
         ram_used_percent = math.ceil(ram_used / total_memory * 100)
-        swap_used_percent = math.ceil(swap_used / total_swap * 100)
+
+        swap_str = ""
+        if total_swap and available_swap:
+            swap_used = total_swap - available_swap
+            swap_used_percent = math.ceil(swap_used / total_swap * 100)
+
+            swap_str = (
+                f"Total Swap: {total_swap * 1.024e-6:.2f} GB\n"
+                f"Swap used: {swap_used * 1.024e-6:.2f} GB -- {swap_used_percent}%"
+            )
+
+        else:
+            swap_str = "No Swap detected"
 
         return (
             "\n\nMemory usage\n\n"
             f"Total RAM: {total_memory * 1.024e-6:.2f} GB\n"
             f"RAM used: {ram_used * 1.024e-6:.2f} GB -- {ram_used_percent}%\n"
-            f"Total Swap: {total_swap * 1.024e-6:.2f} GB\n"
-            f"Swap used: {swap_used * 1.024e-6:.2f} GB -- {swap_used_percent}%\n"
+            f"{swap_str}\n"
         )
 
     @staticmethod
