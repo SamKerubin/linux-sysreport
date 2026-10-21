@@ -78,7 +78,7 @@ class ReportFormatter:
         ram_used = total_memory - available_memory
         swap_used = total_swap - available_swap
         ram_used_percent = math.ceil(ram_used / total_memory * 100)
-        swap_used_percent = math.ceil(swap_used / total_memory * 100)
+        swap_used_percent = math.ceil(swap_used / total_swap * 100)
 
         return (
             "\n\nMemory usage\n\n"
@@ -192,9 +192,9 @@ class ReportFormatter:
 
         devices = []
         for dev in report:
-            devices.append(stringify_power_supply_device(dev) + "\n")
+            devices.append(stringify_power_supply_device(dev))
 
-        return "".join(devices)
+        return "\n".join(devices)
 
     @staticmethod
     def __stringify_system_report(report) -> str:
