@@ -35,15 +35,20 @@ class CPUInfo:
         return None
 
     @staticmethod
-    def __read_cpu_activity() -> tuple[float, float]:
+    def __read_cpu_activity() -> list[tuple]:
+        cores_activity = []
         with open("/proc/stat", "r", encoding="utf-8") as proc_stat:
-            line = proc_stat.readline()
+            for line in proc_stat:
+                if not line.startswith("cpu"):
+                    break
 
-            times = [float(x) for x in line.split()[1:]]
-            total = sum(times)
-            idle = times[4] + times[3]
+                times = [float(x) for x in line.split()[1:]]
+                total = sum(times)
+                idle = times[4] + times[3]
 
-            return total, idle
+                cores_activity.append((total, idle))
+
+        return cores_activity
 
     @staticmethod
     def get_cpu_info_report() -> dict[str, str | float | dict | tuple]:
@@ -107,14 +112,22 @@ class CPUInfo:
                 khz = int(core_freq.readline().strip())
                 cpu_khz.append(khz)
 
-        total1, idle1 = CPUInfo.__read_cpu_activity()
+        activity1 = CPUInfo.__read_cpu_activity()
         time.sleep(0.5)
-        total2, idle2 = CPUInfo.__read_cpu_activity()
+        activity2 = CPUInfo.__read_cpu_activity()
+    
+        avg_total_delta = activity2[0][0] - activity1[0][0]
+        avg_idle_delta = activity2[0][1] - activity1[0][1]
 
-        idle_delta = idle2 - idle1
-        total_delta = total2 - total1
+        cpu_usage = {
+            "avg": (1.0 - (avg_idle_delta / avg_total_delta)) * 100
+        }
 
-        cpu_usage = (1.0 - (idle_delta / total_delta)) * 100.0
+        for x in range(1, len(activity1)):
+            total_delta = (activity2[x][0] - activity1[x][0])
+            idle_delta = (activity2[x][1] - activity1[x][1])
+
+            cpu_usage[str(x - 1)] = (1.0 - (idle_delta /total_delta)) * 100
 
         report["cpu_model"] = cpu_model
         report["load_average"] = os.getloadavg()
