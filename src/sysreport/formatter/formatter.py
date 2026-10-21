@@ -108,7 +108,7 @@ class ReportFormatter:
                 case "Mains":
                     online = dev["power_supply_online"]
                     online_str = ""
-                    if online:
+                    if online != None:
                         online_str = "yes" if online == 1 else "no"
                     else:
                         online_str = "Unknown"
