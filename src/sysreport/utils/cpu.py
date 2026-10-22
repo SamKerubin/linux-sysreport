@@ -119,13 +119,19 @@ class CPUInfo:
         avg_total_delta = activity2[0][0] - activity1[0][0]
         avg_idle_delta = activity2[0][1] - activity1[0][1]
 
-        cpu_usage = {"avg": (1.0 - (avg_idle_delta / avg_total_delta)) * 100}
+        cpu_usage = {
+            "avg": (1.0 - (avg_idle_delta / avg_total_delta)) * 100
+            if avg_total_delta > 0
+            else 0
+        }
 
         for x in range(1, len(activity1)):
             total_delta = activity2[x][0] - activity1[x][0]
             idle_delta = activity2[x][1] - activity1[x][1]
 
-            cpu_usage[str(x - 1)] = (1.0 - (idle_delta / total_delta)) * 100
+            cpu_usage[str(x - 1)] = (
+                (1.0 - (idle_delta / total_delta)) * 100 if total_delta > 0 else 0
+            )
 
         report["cpu_model"] = cpu_model
         report["load_average"] = os.getloadavg()
