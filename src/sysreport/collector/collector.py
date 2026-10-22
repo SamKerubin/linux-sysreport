@@ -1,5 +1,7 @@
 import os
 import sys
+import time
+from importlib.metadata import version
 
 from sysreport.utils.cpu import CPUInfo
 from sysreport.utils.disk import DiskUsage
@@ -30,7 +32,10 @@ class ReportCollector:
                 )
                 sys.exit(2)
 
+        t1 = time.time()
+
         report = {}
+        report["metadata"] = {}
 
         if "cpu" in fields or "all" in fields:
             report["cpu"] = CPUInfo.get_cpu_info_report()
@@ -49,5 +54,13 @@ class ReportCollector:
 
         if "system" in fields or "all" in fields:
             report["system"] = SystemSpecs.get_system_specs_report()
+
+        t2 = time.time()
+
+        report["metadata"] = {
+            "time_elapsed": f"{(t2 - t1) * 1000:.2f} ms",
+            "date": time.ctime(t2),
+            "version": version("linux-sysreport"),
+        }
 
         return report
