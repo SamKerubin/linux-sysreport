@@ -46,10 +46,13 @@ class ReportFormatter:
 
             individual_core_freq.append(f"\tC{core}: {freq_ghz} GHz\n")
 
-        average_freq /= core_count
-
         core_freq_str += "".join(individual_core_freq)
-        core_freq_str += f"Average core frequency: {average_freq:.2f} GHz"
+
+        if core_count > 0:
+            average_freq /= core_count
+            core_freq_str += f"Average core frequency: {average_freq:.2f} GHz"
+        else:
+            core_freq_str += "Average core frequency: Unknown"
 
         return (
             "\n\nCPU information\n\n"
