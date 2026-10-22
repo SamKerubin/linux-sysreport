@@ -22,8 +22,7 @@ class ReportFormatter:
             individual_core_usage.append(f"\tC{core}: {math.ceil(core_usage)}%\n")
 
         usage_str += "".join(individual_core_usage)
-        usage_str += f"Average CPU usage: {math.ceil(usage["avg"])}%"
-
+        usage_str += f"Average CPU usage: {math.ceil(usage['avg'])}%"
 
         temperature_str = (
             f"Core temperature: {math.ceil(temperature / 1000)} °C"
@@ -278,6 +277,12 @@ class ReportFormatter:
             return json.dumps(report, indent="\t")
 
         fields = []
+
+        fields.append(
+            f"\nDate: {report['metadata']['date']}\n"
+            f"Time elapsed: {report['metadata']['time_elapsed']}\n"
+            f"Version: {report['metadata']['version']}\n"
+        )
 
         if "system" in report:
             fields.append(ReportFormatter.__stringify_system_report(report["system"]))
