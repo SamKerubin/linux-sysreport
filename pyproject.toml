@@ -1,6 +1,6 @@
 [project]
 name = "linux-sysreport"
-version = "2.0.0"
+version = "2.0.1"
 description = "A Linux system reporter"
 requires-python = ">=3.11"
 dependencies = [
