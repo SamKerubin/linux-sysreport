@@ -27,7 +27,8 @@ def main() -> None:
         "system: Generate system specs report.\n"
         "mem: Generate memory report.\n"
         "disk: Generate disk report.\n"
-        "power: Generate power supply report.\n",
+        "power: Generate power supply report.\n"
+        "net: Generate network report.\n",
     )
 
     args = parser.parse_args()
