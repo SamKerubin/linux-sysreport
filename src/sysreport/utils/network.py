@@ -56,7 +56,19 @@ class NetworkStatus:
                 return "Layer 3 IP tunnel"
 
             case 512:
-                return "Cellular modem"
+                driver_path = os.readlink(f"/sys/class/net/{dev}/device/driver")
+                driver = os.path.basename(driver_path)
+
+                if driver == "qmi_wwan" or driver == "rmnet":
+                    return "Cellular modem (QMI/RmNet)"
+
+                if driver == "cdc_mbim":
+                    return "Cellular modem (MBIM)"
+
+                if driver == "cdc_ncm" or driver == "cdc_ether":
+                    return "Cellular modem (USB Ethernet)"
+
+                return "WAN Device"
 
             case _:
                 return f"Unknown device type '{id}'"
