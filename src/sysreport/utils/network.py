@@ -32,6 +32,27 @@ class NetworkStatus:
                 return "Loopback"
 
             case 65534:
+                with open(
+                    f"/sys/class/net/{dev}/uevent", "r", encoding="utf-8"
+                ) as uevent:
+                    line = uevent.readline().strip()
+                    if line == "DEVTYPE=wireguard":
+                        return "WireGuard VPN"
+
+                if os.path.exists(f"/sys/class/net/{dev}/tun_flags"):
+                    with open(
+                        f"/sys/class/net/{dev}/tun_flags", "r", encoding="utf-8"
+                    ) as tun_flags:
+                        line = tun_flags.readline().strip()
+
+                        if int(line) == 0x0001:
+                            return "TUN tunnel"
+
+                        if int(line) == 0x0002:
+                            return "TAP tunnel"
+
+                    return "TUN/TAP tunnel"
+
                 return "Layer 3 IP tunnel"
 
             case 512:
