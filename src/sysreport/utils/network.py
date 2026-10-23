@@ -90,6 +90,10 @@ class NetworkStatus:
 
     @staticmethod
     def get_network_report() -> dict:
+        NET_DEV_BASE_PATH = "/sys/class/net/"
+        if not os.path.exists(NET_DEV_BASE_PATH):
+            return {"network": "Network is unreachable"}
+
         report = {}
 
         activity1 = NetworkStatus.__read_network_activity()
@@ -109,10 +113,6 @@ class NetworkStatus:
 
             report[dev]["recieved"] = b_rec_delta
             report[dev]["transmitted"] = b_trans_delta
-
-        NET_DEV_BASE_PATH = "/sys/class/net/"
-        if not os.path.exists(NET_DEV_BASE_PATH):
-            return {"network": "Network is unreachable"}
 
         net_devs = activity2.keys()
         for dev in net_devs:
