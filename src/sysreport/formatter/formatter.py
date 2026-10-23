@@ -115,6 +115,25 @@ class ReportFormatter:
         )
 
     @staticmethod
+    def __stringify_network_report(report) -> str:
+        if not isinstance(report, dict):
+            return "Network is unreachable\n"
+        
+        devs = []
+
+        for dev in report:
+            dev_report = report[dev]
+
+            devs.append(
+                f"{dev} -- {dev_report['type']}\n"
+                f"State: {dev_report['state']}\n"
+                f"Download speed: {dev_report['recieved'] / 1000:.2f} KB/s\n"
+                f"Upload speed: {dev_report['transmitted'] / 1000:.2f} KB/s\n"
+            )
+
+        return "\n".join(devs)
+
+    @staticmethod
     def __stringify_power_supply_report(report) -> str:
         def stringify_power_supply_device(dev) -> str:
             dev_type = dev["power_supply_type"]
@@ -306,6 +325,12 @@ class ReportFormatter:
                 )
 
             fields.append(disk_report_str)
+
+        if "network" in report:
+            fields.append(
+                "\n\nNetwork status\n\n"
+                + ReportFormatter.__stringify_network_report(report["network"])
+            )
 
         if "memory" in report:
             fields.append(ReportFormatter.__stringify_memory_report(report["memory"]))
