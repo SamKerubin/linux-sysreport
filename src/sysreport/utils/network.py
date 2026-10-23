@@ -12,8 +12,14 @@ class NetworkStatus:
             case 772:
                 return "Loopback"
 
+            case 65534:
+                return "Layer 3 IP tunnel"
+
+            case 512:
+                return "Cellular modem"
+
             case _:
-                return "Unknown"
+                return f"Unknown device type '{id}'"
 
     @staticmethod
     def __read_network_activity() -> dict[str, tuple]:
