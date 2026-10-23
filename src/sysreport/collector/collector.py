@@ -6,6 +6,7 @@ from importlib.metadata import version
 from sysreport.utils.cpu import CPUInfo
 from sysreport.utils.disk import DiskUsage
 from sysreport.utils.memory import MemoryUsage
+from sysreport.utils.network import NetworkStatus
 from sysreport.utils.power import PowerSupplyStatus
 from sysreport.utils.system import SystemSpecs
 
@@ -13,7 +14,7 @@ from sysreport.utils.system import SystemSpecs
 class ReportCollector:
     @staticmethod
     def collect(args) -> dict:
-        VALID_FIELDS = ("all", "cpu", "mem", "system", "disk", "power")
+        VALID_FIELDS = ("all", "cpu", "mem", "system", "disk", "power", "net")
 
         fields = args.collect.split(",")
 
@@ -48,6 +49,9 @@ class ReportCollector:
 
         if "mem" in fields or "all" in fields:
             report["memory"] = MemoryUsage.get_memory_report()
+
+        if "net" in fields or "all" in fields:
+            report["network"] = NetworkStatus.get_network_report()
 
         if "power" in fields or "all" in fields:
             report["power_supply"] = PowerSupplyStatus.get_power_supply_report()
