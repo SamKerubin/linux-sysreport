@@ -4,10 +4,29 @@ import time
 
 class NetworkStatus:
     @staticmethod
-    def __get_network_type(id) -> str:
+    def __get_network_type(dev, id) -> str:
         match id:
             case 1:
-                return "Ethernet"
+                with open(
+                    f"/sys/class/net/{dev}/uevent", "r", encoding="utf-8"
+                ) as uevent:
+                    line = uevent.readline().strip()
+                    if line == "DEVTYPE=vlan":
+                        return "VLAN"
+
+                    if line == "DEVTYPE=wlan":
+                        return "Wi-Fi (Wireless)"
+
+                if os.path.exists(f"/sys/class/net/{dev}/wireless"):
+                    return "Wi-Fi (Wireless)"
+
+                if os.path.exists(f"/sys/class/net/{dev}/bridge"):
+                    return "Virtual bridge"
+
+                if os.path.exists(f"/sys/class/net/{dev}/bonding"):
+                    return "Network bond"
+
+                return "Physical ethernet"
 
             case 772:
                 return "Loopback"
@@ -71,6 +90,8 @@ class NetworkStatus:
             dev_type_path = os.path.join(NET_DEV_BASE_PATH, dev, "type")
             with open(dev_type_path, "r", encoding="utf-8") as t:
                 net_type_int = int(t.readline().strip())
-                report[dev]["type"] = NetworkStatus.__get_network_type(net_type_int)
+                report[dev]["type"] = NetworkStatus.__get_network_type(
+                    dev, net_type_int
+                )
 
         return report
