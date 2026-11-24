@@ -138,18 +138,20 @@ class ReportFormatter:
         ports = []
         if "tcp" in report:
             ports.append("TCP ports\n")
-            for tcp_port in report["tcp"]:
+            for sl in report["tcp"]:
+                tcp_port = report["tcp"][sl]
                 ports.append(
-                    f"Slot {tcp_port['sl']}\n"
+                    f"Slot {sl}\n"
                     f"State: {tcp_port['status']}\n"
                     f"Local address: {tcp_port['local_address']}, in port {tcp_port['port']}\n"
                 )
 
         if "udp" in report:
             ports.append("UDP ports\n")
-            for udp_port in report["udp"]:
+            for sl in report["udp"]:
+                udp_port = report["udp"][sl]
                 ports.append(
-                    f"Slot {udp_port['sl']}\n"
+                    f"Slot {sl}\n"
                     f"State: {udp_port['status']}\n"
                     f"Local address: {udp_port['local_address']}, in port {udp_port['port']}\n"
                 )

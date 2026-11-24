@@ -18,7 +18,7 @@ class PortStatus:
         report = {}
 
         if add_tcp:
-            report["tcp"] = []
+            report["tcp"] = {}
             with open("/proc/net/tcp", "r", encoding="utf-8") as tcp:
                 tcp.readline()
 
@@ -38,17 +38,14 @@ class PortStatus:
 
                     local_address, port = PortStatus.__parse_address(parts)
 
-                    report["tcp"].append(
-                        {
-                            "sl": parts[0][:-1],
-                            "local_address": local_address,
-                            "port": port,
-                            "status": status,
-                        }
-                    )
+                    report["tcp"][parts[0][:-1]] = {
+                        "local_address": local_address,
+                        "port": port,
+                        "status": status,
+                    }
 
         if add_udp:
-            report["udp"] = []
+            report["udp"] = {}
             with open("/proc/net/udp", "r", encoding="utf-8") as udp:
                 udp.readline()
 
@@ -64,13 +61,10 @@ class PortStatus:
 
                     local_address, port = PortStatus.__parse_address(parts)
 
-                    report["udp"].append(
-                        {
-                            "sl": parts[0][:-1],
-                            "local_address": local_address,
-                            "port": port,
-                            "status": status,
-                        }
-                    )
+                    report["udp"][parts[0][:-1]] = {
+                        "local_address": local_address,
+                        "port": port,
+                        "status": status,
+                    }
 
         return report
