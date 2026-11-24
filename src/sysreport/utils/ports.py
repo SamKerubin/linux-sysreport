@@ -77,4 +77,43 @@ class PortStatus:
 
                     inode_hash["udp"][inode] = sl
 
+        proc_pid = [pid for pid in os.listdir("/proc/") if pid.isdigit()]
+        for pid in proc_pid:
+            path = os.path.join("/proc/", pid, "fd")
+
+            fd_list = os.listdir(path)
+            for fd in fd_list:
+                try:
+                    full_path = os.path.join(path, fd)
+                    link = os.readlink(full_path)
+                except OSError:
+                    continue
+
+                if not link.startswith("socket:["):
+                    continue
+
+                parts = link.split(":")
+                inode_part = parts[1][1:-1]
+
+                port_type = None
+                if inode_part in inode_hash["tcp"]:
+                    port_type = "tcp"
+                if inode_part in inode_hash["udp"]:
+                    port_type = "udp"
+
+                if not port_type:
+                    continue
+
+                sl = inode_hash[port_type][inode_part]
+
+                comm_path = os.path.join("/proc/", pid, "comm")
+                with open(comm_path, "r", encoding="utf-8") as comm:
+                    command = comm.readline().strip()
+
+                report[port_type][sl]["process"] = {
+                    "pid": pid,
+                    "command": command,
+                    "fd": fd,
+                }
+
         return report
