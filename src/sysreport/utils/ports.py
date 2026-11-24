@@ -1,6 +1,8 @@
 class PortStatus:
     @staticmethod
     def __parse_address(parts) -> tuple:
+        sl = parts[0][:-1]
+
         address_hex = parts[1]
         local_address_hex, port_hex = address_hex.split(":")
 
@@ -11,7 +13,9 @@ class PortStatus:
         )
         port = str(int(port_hex, 16))
 
-        return local_address, port
+        inode = parts[9]
+
+        return local_address, port, sl, inode
 
     @staticmethod
     def get_net_port_status(add_tcp, add_udp) -> dict:
@@ -36,9 +40,9 @@ class PortStatus:
                     if status_hex == "07":
                         status = "CLOSE"
 
-                    local_address, port = PortStatus.__parse_address(parts)
+                    local_address, port, sl, inode = PortStatus.__parse_address(parts)
 
-                    report["tcp"][parts[0][:-1]] = {
+                    report["tcp"][sl] = {
                         "local_address": local_address,
                         "port": port,
                         "status": status,
@@ -59,9 +63,9 @@ class PortStatus:
                     if status_hex == "07":
                         status = "UNCONN"
 
-                    local_address, port = PortStatus.__parse_address(parts)
+                    local_address, port, sl, inode = PortStatus.__parse_address(parts)
 
-                    report["udp"][parts[0][:-1]] = {
+                    report["udp"][sl] = {
                         "local_address": local_address,
                         "port": port,
                         "status": status,
