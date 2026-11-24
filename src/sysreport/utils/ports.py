@@ -1,3 +1,6 @@
+import os
+
+
 class PortStatus:
     @staticmethod
     def __parse_address(parts) -> tuple:
@@ -19,10 +22,10 @@ class PortStatus:
 
     @staticmethod
     def get_net_port_status(add_tcp, add_udp) -> dict:
-        report = {}
+        report = {"tcp": {}, "udp": {}}
+        inode_hash = {"tcp": {}, "udp": {}}
 
         if add_tcp:
-            report["tcp"] = {}
             with open("/proc/net/tcp", "r", encoding="utf-8") as tcp:
                 tcp.readline()
 
@@ -48,8 +51,9 @@ class PortStatus:
                         "status": status,
                     }
 
+                    inode_hash["tcp"][inode] = sl
+
         if add_udp:
-            report["udp"] = {}
             with open("/proc/net/udp", "r", encoding="utf-8") as udp:
                 udp.readline()
 
@@ -70,5 +74,7 @@ class PortStatus:
                         "port": port,
                         "status": status,
                     }
+
+                    inode_hash["udp"][inode] = sl
 
         return report
