@@ -9,12 +9,23 @@ from sysreport.utils.memory import MemoryUsage
 from sysreport.utils.network import NetworkStatus
 from sysreport.utils.power import PowerSupplyStatus
 from sysreport.utils.system import SystemSpecs
+from sysreport.utils.ports import PortStatus
 
 
 class ReportCollector:
     @staticmethod
     def collect(args) -> dict:
-        VALID_FIELDS = ("all", "cpu", "mem", "system", "disk", "power", "net")
+        VALID_FIELDS = (
+            "all",
+            "cpu",
+            "mem",
+            "system",
+            "disk",
+            "power",
+            "net",
+            "tcp_ports",
+            "udp_ports",
+        )
 
         fields = args.collect.split(",")
 
@@ -58,6 +69,18 @@ class ReportCollector:
 
         if "system" in fields or "all" in fields:
             report["system"] = SystemSpecs.get_system_specs_report()
+
+        if "tcp_ports" in fields or "udp_ports" in fields or "all" in fields:
+            add_tcp = False
+            add_udp = False
+
+            if "tcp_ports" in fields or "all" in fields:
+                add_tcp = True
+
+            if "udp_ports" in fields or "all" in fields:
+                add_udp = True
+
+            report["ports"] = PortStatus.get_net_port_status(add_tcp, add_udp)
 
         t2 = time.time()
 

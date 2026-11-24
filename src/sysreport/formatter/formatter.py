@@ -134,6 +134,29 @@ class ReportFormatter:
         return "\n".join(devs)
 
     @staticmethod
+    def __stringify_port_report(report) -> str:
+        ports = []
+        if "tcp" in report:
+            ports.append("TCP ports\n")
+            for tcp_port in report["tcp"]:
+                ports.append(
+                    f"Slot {tcp_port['sl']}\n"
+                    f"State: {tcp_port['status']}\n"
+                    f"Local address: {tcp_port['local_address']}, in port {tcp_port['port']}\n"
+                )
+
+        if "udp" in report:
+            ports.append("UDP ports\n")
+            for udp_port in report["udp"]:
+                ports.append(
+                    f"Slot {udp_port['sl']}\n"
+                    f"State: {udp_port['status']}\n"
+                    f"Local address: {udp_port['local_address']}, in port {udp_port['port']}\n"
+                )
+
+        return "\n".join(ports)
+
+    @staticmethod
     def __stringify_power_supply_report(report) -> str:
         def stringify_power_supply_device(dev) -> str:
             dev_type = dev["power_supply_type"]
@@ -330,6 +353,12 @@ class ReportFormatter:
             fields.append(
                 "\n\nNetwork status\n\n"
                 + ReportFormatter.__stringify_network_report(report["network"])
+            )
+
+        if "ports" in report:
+            fields.append(
+                "\n\nPort status\n\n"
+                + ReportFormatter.__stringify_port_report(report["ports"])
             )
 
         if "memory" in report:
