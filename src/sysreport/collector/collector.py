@@ -7,9 +7,9 @@ from sysreport.utils.cpu import CPUInfo
 from sysreport.utils.disk import DiskUsage
 from sysreport.utils.memory import MemoryUsage
 from sysreport.utils.network import NetworkStatus
+from sysreport.utils.ports import PortStatus
 from sysreport.utils.power import PowerSupplyStatus
 from sysreport.utils.system import SystemSpecs
-from sysreport.utils.ports import PortStatus
 
 
 class ReportCollector:
@@ -64,12 +64,6 @@ class ReportCollector:
         if "net" in fields or "all" in fields:
             report["network"] = NetworkStatus.get_network_report()
 
-        if "power" in fields or "all" in fields:
-            report["power_supply"] = PowerSupplyStatus.get_power_supply_report()
-
-        if "system" in fields or "all" in fields:
-            report["system"] = SystemSpecs.get_system_specs_report()
-
         if "tcp_ports" in fields or "udp_ports" in fields or "all" in fields:
             add_tcp = False
             add_udp = False
@@ -81,6 +75,12 @@ class ReportCollector:
                 add_udp = True
 
             report["ports"] = PortStatus.get_net_port_status(add_tcp, add_udp)
+
+        if "power" in fields or "all" in fields:
+            report["power_supply"] = PowerSupplyStatus.get_power_supply_report()
+
+        if "system" in fields or "all" in fields:
+            report["system"] = SystemSpecs.get_system_specs_report()
 
         t2 = time.time()
 
