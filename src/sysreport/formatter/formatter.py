@@ -149,13 +149,13 @@ class ReportFormatter:
             )
 
         ports = []
-        if "tcp" in report:
+        if report["tcp"]:
             ports.append("TCP ports\n")
             for sl in report["tcp"]:
                 tcp_port = report["tcp"][sl]
                 ports.append(stringify_port(tcp_port, sl))
 
-        if "udp" in report:
+        if report["udp"]:
             ports.append("UDP ports\n")
             for sl in report["udp"]:
                 udp_port = report["udp"][sl]
