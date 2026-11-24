@@ -135,26 +135,31 @@ class ReportFormatter:
 
     @staticmethod
     def __stringify_port_report(report) -> str:
+        def stringify_port(port, sl) -> str:
+            process_str = ""
+            if "process" in port:
+                process = port["process"]
+                process_str = f"Process: {process['command']}, PID {process['pid']}, fd {process['fd']}\n"
+
+            return (
+                f"Slot {sl}\n"
+                f"State: {tcp_port['status']}\n"
+                f"Local address: {tcp_port['local_address']}, in port {tcp_port['port']}\n"
+                f"{process_str}"
+            )
+
         ports = []
         if "tcp" in report:
             ports.append("TCP ports\n")
             for sl in report["tcp"]:
                 tcp_port = report["tcp"][sl]
-                ports.append(
-                    f"Slot {sl}\n"
-                    f"State: {tcp_port['status']}\n"
-                    f"Local address: {tcp_port['local_address']}, in port {tcp_port['port']}\n"
-                )
+                ports.append(stringify_port(tcp_port, sl))
 
         if "udp" in report:
             ports.append("UDP ports\n")
             for sl in report["udp"]:
                 udp_port = report["udp"][sl]
-                ports.append(
-                    f"Slot {sl}\n"
-                    f"State: {udp_port['status']}\n"
-                    f"Local address: {udp_port['local_address']}, in port {udp_port['port']}\n"
-                )
+                ports.append(stringify_port(udp_port, sl))
 
         return "\n".join(ports)
 
