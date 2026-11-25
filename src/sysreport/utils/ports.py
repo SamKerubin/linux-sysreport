@@ -21,11 +21,14 @@ class PortStatus:
         return local_address, port, sl, inode
 
     @staticmethod
-    def get_net_port_status(add_tcp, add_udp) -> dict:
+    def get_net_port_status(options) -> dict:
+        tcp_opt = options.get("tcp", {})
+        udp_opt = options.get("udp", {})
+
         report = {"tcp": {}, "udp": {}}
         inode_hash = {"tcp": {}, "udp": {}}
 
-        if add_tcp:
+        if tcp_opt.get("enable"):
             with open("/proc/net/tcp", "r", encoding="utf-8") as tcp:
                 tcp.readline()
 
@@ -43,6 +46,9 @@ class PortStatus:
                     if status_hex == "07":
                         status = "CLOSE"
 
+                    if status != "LISTEN" and tcp_opt.get("listen_only"):
+                        continue
+
                     local_address, port, sl, inode = PortStatus.__parse_address(parts)
 
                     report["tcp"][sl] = {
@@ -53,7 +59,7 @@ class PortStatus:
 
                     inode_hash["tcp"][inode] = sl
 
-        if add_udp:
+        if udp_opt.get("enable"):
             with open("/proc/net/udp", "r", encoding="utf-8") as udp:
                 udp.readline()
 
@@ -66,6 +72,9 @@ class PortStatus:
                         status = "CONN"
                     if status_hex == "07":
                         status = "UNCONN"
+
+                    if status != "CONN" and udp_opt.get("conn_only"):
+                        continue
 
                     local_address, port, sl, inode = PortStatus.__parse_address(parts)
 

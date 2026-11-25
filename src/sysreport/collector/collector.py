@@ -14,18 +14,10 @@ from sysreport.utils.system import SystemSpecs
 
 class ReportCollector:
     @staticmethod
-    def collect(args) -> dict:
-        VALID_FIELDS = (
-            "all",
-            "cpu",
-            "mem",
-            "system",
-            "disk",
-            "power",
-            "net",
-            "tcp_ports",
-            "udp_ports",
-        )
+    def collect(args, config) -> dict:
+        options = config.get("options")
+
+        VALID_FIELDS = ("all", "cpu", "mem", "system", "disk", "power", "net", "ports")
 
         fields = args.collect.split(",")
 
@@ -64,17 +56,9 @@ class ReportCollector:
         if "net" in fields or "all" in fields:
             report["network"] = NetworkStatus.get_network_report()
 
-        if "tcp_ports" in fields or "udp_ports" in fields or "all" in fields:
-            add_tcp = False
-            add_udp = False
-
-            if "tcp_ports" in fields or "all" in fields:
-                add_tcp = True
-
-            if "udp_ports" in fields or "all" in fields:
-                add_udp = True
-
-            report["ports"] = PortStatus.get_net_port_status(add_tcp, add_udp)
+        if "ports" in fields or "all" in fields:
+            ports_config = options.get("ports", {})
+            report["ports"] = PortStatus.get_net_port_status(ports_config)
 
         if "power" in fields or "all" in fields:
             report["power_supply"] = PowerSupplyStatus.get_power_supply_report()

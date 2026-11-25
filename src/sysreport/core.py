@@ -4,6 +4,7 @@ import argparse
 
 from sysreport.collector.collector import ReportCollector
 from sysreport.formatter.formatter import ReportFormatter
+from sysreport.config.config import SysreportConfig
 
 
 def main() -> None:
@@ -32,8 +33,9 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    config = SysreportConfig.load()
 
-    report = ReportCollector.collect(args)
+    report = ReportCollector.collect(args, config)
     report_str = ReportFormatter.stringify_report(report, args)
     print(report_str)
 
