@@ -3,8 +3,8 @@
 import argparse
 
 from sysreport.collector.collector import ReportCollector
-from sysreport.formatter.formatter import ReportFormatter
 from sysreport.config.config import SysreportConfig
+from sysreport.formatter.formatter import ReportFormatter
 
 
 def main() -> None:
@@ -29,7 +29,8 @@ def main() -> None:
         "mem: Generate memory report.\n"
         "disk: Generate disk report.\n"
         "power: Generate power supply report.\n"
-        "net: Generate network report.\n",
+        "net: Generate network report.\n"
+        "ports: Generate TCP/UDP sockets report.\n",
     )
 
     args = parser.parse_args()

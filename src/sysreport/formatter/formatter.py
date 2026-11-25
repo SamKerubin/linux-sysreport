@@ -143,8 +143,8 @@ class ReportFormatter:
 
             return (
                 f"Slot {sl}\n"
-                f"State: {tcp_port['status']}\n"
-                f"Local address: {tcp_port['local_address']}, in port {tcp_port['port']}\n"
+                f"State: {port['status']}\n"
+                f"Local address: {port['local_address']}, in port {port['port']}\n"
                 f"{process_str}"
             )
 
